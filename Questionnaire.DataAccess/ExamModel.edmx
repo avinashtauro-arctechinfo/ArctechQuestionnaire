@@ -1,0 +1,518 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="QuestionnaireModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AnswerOptions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="varchar" MaxLength="2000" Nullable="false" />
+          <Property Name="AnswerStatus" Type="bit" Nullable="false" />
+          <Property Name="QuestionRefId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Candidate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Exam">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="250" />
+          <Property Name="TimeStamp" Type="datetime" Nullable="false" />
+          <Property Name="TopicRefId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExamAnswers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExamQuestionRefId" Type="int" Nullable="false" />
+          <Property Name="AnswerOptionRefId" Type="int" Nullable="false" />
+          <Property Name="CandidateRefId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExamQuestions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExamRefId" Type="int" Nullable="false" />
+          <Property Name="QuestionRefId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="varchar" MaxLength="2000" Nullable="false" />
+          <Property Name="Notes" Type="varchar" MaxLength="50" />
+          <Property Name="TopicRefId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Topic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_AnswerOptions_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="AnswerOptions" Type="Self.AnswerOptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AnswerOptions">
+              <PropertyRef Name="QuestionRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exam_Topic">
+          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+          <End Role="Exam" Type="Self.Exam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Exam">
+              <PropertyRef Name="TopicRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamAnswers_AnswerOptions">
+          <End Role="AnswerOptions" Type="Self.AnswerOptions" Multiplicity="1" />
+          <End Role="ExamAnswers" Type="Self.ExamAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AnswerOptions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamAnswers">
+              <PropertyRef Name="AnswerOptionRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamAnswers_Candidate">
+          <End Role="Candidate" Type="Self.Candidate" Multiplicity="1" />
+          <End Role="ExamAnswers" Type="Self.ExamAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamAnswers">
+              <PropertyRef Name="CandidateRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamAnswers_ExamQuestions">
+          <End Role="ExamQuestions" Type="Self.ExamQuestions" Multiplicity="1" />
+          <End Role="ExamAnswers" Type="Self.ExamAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExamQuestions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamAnswers">
+              <PropertyRef Name="ExamQuestionRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamQuestions_Exam">
+          <End Role="Exam" Type="Self.Exam" Multiplicity="1" />
+          <End Role="ExamQuestions" Type="Self.ExamQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exam">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamQuestions">
+              <PropertyRef Name="ExamRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamQuestions_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="ExamQuestions" Type="Self.ExamQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamQuestions">
+              <PropertyRef Name="QuestionRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Questions_Exam">
+          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="TopicRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="QuestionnaireModelStoreContainer">
+          <EntitySet Name="AnswerOptions" EntityType="Self.AnswerOptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Candidate" EntityType="Self.Candidate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Exam" EntityType="Self.Exam" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExamAnswers" EntityType="Self.ExamAnswers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExamQuestions" EntityType="Self.ExamQuestions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Topic" EntityType="Self.Topic" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AnswerOptions_Question" Association="Self.FK_AnswerOptions_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="AnswerOptions" EntitySet="AnswerOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exam_Topic" Association="Self.FK_Exam_Topic">
+            <End Role="Topic" EntitySet="Topic" />
+            <End Role="Exam" EntitySet="Exam" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamAnswers_AnswerOptions" Association="Self.FK_ExamAnswers_AnswerOptions">
+            <End Role="AnswerOptions" EntitySet="AnswerOptions" />
+            <End Role="ExamAnswers" EntitySet="ExamAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamAnswers_Candidate" Association="Self.FK_ExamAnswers_Candidate">
+            <End Role="Candidate" EntitySet="Candidate" />
+            <End Role="ExamAnswers" EntitySet="ExamAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamAnswers_ExamQuestions" Association="Self.FK_ExamAnswers_ExamQuestions">
+            <End Role="ExamQuestions" EntitySet="ExamQuestions" />
+            <End Role="ExamAnswers" EntitySet="ExamAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamQuestions_Exam" Association="Self.FK_ExamQuestions_Exam">
+            <End Role="Exam" EntitySet="Exam" />
+            <End Role="ExamQuestions" EntitySet="ExamQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamQuestions_Question" Association="Self.FK_ExamQuestions_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="ExamQuestions" EntitySet="ExamQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Questions_Exam" Association="Self.FK_Questions_Exam">
+            <End Role="Topic" EntitySet="Topic" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="QuestionnaireModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="QuestionnaireEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AnswerOptions" EntityType="QuestionnaireModel.AnswerOption" />
+          <EntitySet Name="Candidates" EntityType="QuestionnaireModel.Candidate" />
+          <EntitySet Name="Exams" EntityType="QuestionnaireModel.Exam" />
+          <EntitySet Name="ExamAnswers" EntityType="QuestionnaireModel.ExamAnswer" />
+          <EntitySet Name="ExamQuestions" EntityType="QuestionnaireModel.ExamQuestion" />
+          <EntitySet Name="Topics" EntityType="QuestionnaireModel.Topic" />
+          <AssociationSet Name="FK_ExamAnswers_AnswerOptions" Association="QuestionnaireModel.FK_ExamAnswers_AnswerOptions">
+            <End Role="AnswerOption" EntitySet="AnswerOptions" />
+            <End Role="ExamAnswer" EntitySet="ExamAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamAnswers_Candidate" Association="QuestionnaireModel.FK_ExamAnswers_Candidate">
+            <End Role="Candidate" EntitySet="Candidates" />
+            <End Role="ExamAnswer" EntitySet="ExamAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exam_Topic" Association="QuestionnaireModel.FK_Exam_Topic">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="Exam" EntitySet="Exams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamQuestions_Exam" Association="QuestionnaireModel.FK_ExamQuestions_Exam">
+            <End Role="Exam" EntitySet="Exams" />
+            <End Role="ExamQuestion" EntitySet="ExamQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamAnswers_ExamQuestions" Association="QuestionnaireModel.FK_ExamAnswers_ExamQuestions">
+            <End Role="ExamQuestion" EntitySet="ExamQuestions" />
+            <End Role="ExamAnswer" EntitySet="ExamAnswers" />
+          </AssociationSet>
+          <EntitySet Name="Questions" EntityType="QuestionnaireModel.Question" />
+          <AssociationSet Name="FK_AnswerOptions_Question" Association="QuestionnaireModel.FK_AnswerOptions_Question">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="AnswerOption" EntitySet="AnswerOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExamQuestions_Question" Association="QuestionnaireModel.FK_ExamQuestions_Question">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="ExamQuestion" EntitySet="ExamQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Questions_Exam" Association="QuestionnaireModel.FK_Questions_Exam">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="AnswerOption">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="AnswerStatus" Type="Boolean" Nullable="false" />
+          <Property Name="QuestionRefId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ExamAnswers" Relationship="QuestionnaireModel.FK_ExamAnswers_AnswerOptions" FromRole="AnswerOption" ToRole="ExamAnswer" />
+          <NavigationProperty Name="Question" Relationship="QuestionnaireModel.FK_AnswerOptions_Question" FromRole="AnswerOption" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="Candidate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ExamAnswers" Relationship="QuestionnaireModel.FK_ExamAnswers_Candidate" FromRole="Candidate" ToRole="ExamAnswer" />
+        </EntityType>
+        <EntityType Name="Exam">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TopicRefId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Topic" Relationship="QuestionnaireModel.FK_Exam_Topic" FromRole="Exam" ToRole="Topic" />
+          <NavigationProperty Name="ExamQuestions" Relationship="QuestionnaireModel.FK_ExamQuestions_Exam" FromRole="Exam" ToRole="ExamQuestion" />
+        </EntityType>
+        <EntityType Name="ExamAnswer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExamQuestionRefId" Type="Int32" Nullable="false" />
+          <Property Name="AnswerOptionRefId" Type="Int32" Nullable="false" />
+          <Property Name="CandidateRefId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AnswerOption" Relationship="QuestionnaireModel.FK_ExamAnswers_AnswerOptions" FromRole="ExamAnswer" ToRole="AnswerOption" />
+          <NavigationProperty Name="Candidate" Relationship="QuestionnaireModel.FK_ExamAnswers_Candidate" FromRole="ExamAnswer" ToRole="Candidate" />
+          <NavigationProperty Name="ExamQuestion" Relationship="QuestionnaireModel.FK_ExamAnswers_ExamQuestions" FromRole="ExamAnswer" ToRole="ExamQuestion" />
+        </EntityType>
+        <EntityType Name="ExamQuestion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExamRefId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionRefId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Exam" Relationship="QuestionnaireModel.FK_ExamQuestions_Exam" FromRole="ExamQuestion" ToRole="Exam" />
+          <NavigationProperty Name="ExamAnswers" Relationship="QuestionnaireModel.FK_ExamAnswers_ExamQuestions" FromRole="ExamQuestion" ToRole="ExamAnswer" />
+          <NavigationProperty Name="Question" Relationship="QuestionnaireModel.FK_ExamQuestions_Question" FromRole="ExamQuestion" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="Topic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Exams" Relationship="QuestionnaireModel.FK_Exam_Topic" FromRole="Topic" ToRole="Exam" />
+          <NavigationProperty Name="Questions" Relationship="QuestionnaireModel.FK_Questions_Exam" FromRole="Topic" ToRole="Question" />
+        </EntityType>
+        <Association Name="FK_ExamAnswers_AnswerOptions">
+          <End Type="QuestionnaireModel.AnswerOption" Role="AnswerOption" Multiplicity="1" />
+          <End Type="QuestionnaireModel.ExamAnswer" Role="ExamAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AnswerOption">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamAnswer">
+              <PropertyRef Name="AnswerOptionRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamAnswers_Candidate">
+          <End Type="QuestionnaireModel.Candidate" Role="Candidate" Multiplicity="1" />
+          <End Type="QuestionnaireModel.ExamAnswer" Role="ExamAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Candidate">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamAnswer">
+              <PropertyRef Name="CandidateRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Exam_Topic">
+          <End Type="QuestionnaireModel.Topic" Role="Topic" Multiplicity="1" />
+          <End Type="QuestionnaireModel.Exam" Role="Exam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Exam">
+              <PropertyRef Name="TopicRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamQuestions_Exam">
+          <End Type="QuestionnaireModel.Exam" Role="Exam" Multiplicity="1" />
+          <End Type="QuestionnaireModel.ExamQuestion" Role="ExamQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exam">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamQuestion">
+              <PropertyRef Name="ExamRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamAnswers_ExamQuestions">
+          <End Type="QuestionnaireModel.ExamQuestion" Role="ExamQuestion" Multiplicity="1" />
+          <End Type="QuestionnaireModel.ExamAnswer" Role="ExamAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExamQuestion">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamAnswer">
+              <PropertyRef Name="ExamQuestionRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TopicRefId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AnswerOptions" Relationship="QuestionnaireModel.FK_AnswerOptions_Question" FromRole="Question" ToRole="AnswerOption" />
+          <NavigationProperty Name="ExamQuestions" Relationship="QuestionnaireModel.FK_ExamQuestions_Question" FromRole="Question" ToRole="ExamQuestion" />
+          <NavigationProperty Name="Topic" Relationship="QuestionnaireModel.FK_Questions_Exam" FromRole="Question" ToRole="Topic" />
+        </EntityType>
+        <Association Name="FK_AnswerOptions_Question">
+          <End Type="QuestionnaireModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="QuestionnaireModel.AnswerOption" Role="AnswerOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AnswerOption">
+              <PropertyRef Name="QuestionRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExamQuestions_Question">
+          <End Type="QuestionnaireModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="QuestionnaireModel.ExamQuestion" Role="ExamQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExamQuestion">
+              <PropertyRef Name="QuestionRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Questions_Exam">
+          <End Type="QuestionnaireModel.Topic" Role="Topic" Multiplicity="1" />
+          <End Type="QuestionnaireModel.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="TopicRefId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="QuestionnaireModelStoreContainer" CdmEntityContainer="QuestionnaireEntities">
+          <EntitySetMapping Name="AnswerOptions">
+            <EntityTypeMapping TypeName="QuestionnaireModel.AnswerOption">
+              <MappingFragment StoreEntitySet="AnswerOptions">
+                <ScalarProperty Name="QuestionRefId" ColumnName="QuestionRefId" />
+                <ScalarProperty Name="AnswerStatus" ColumnName="AnswerStatus" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Candidates">
+            <EntityTypeMapping TypeName="QuestionnaireModel.Candidate">
+              <MappingFragment StoreEntitySet="Candidate">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Exams">
+            <EntityTypeMapping TypeName="QuestionnaireModel.Exam">
+              <MappingFragment StoreEntitySet="Exam">
+                <ScalarProperty Name="TopicRefId" ColumnName="TopicRefId" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExamAnswers">
+            <EntityTypeMapping TypeName="QuestionnaireModel.ExamAnswer">
+              <MappingFragment StoreEntitySet="ExamAnswers">
+                <ScalarProperty Name="CandidateRefId" ColumnName="CandidateRefId" />
+                <ScalarProperty Name="AnswerOptionRefId" ColumnName="AnswerOptionRefId" />
+                <ScalarProperty Name="ExamQuestionRefId" ColumnName="ExamQuestionRefId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExamQuestions">
+            <EntityTypeMapping TypeName="QuestionnaireModel.ExamQuestion">
+              <MappingFragment StoreEntitySet="ExamQuestions">
+                <ScalarProperty Name="QuestionRefId" ColumnName="QuestionRefId" />
+                <ScalarProperty Name="ExamRefId" ColumnName="ExamRefId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Topics">
+            <EntityTypeMapping TypeName="QuestionnaireModel.Topic">
+              <MappingFragment StoreEntitySet="Topic">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="QuestionnaireModel.Question">
+              <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="TopicRefId" ColumnName="TopicRefId" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
