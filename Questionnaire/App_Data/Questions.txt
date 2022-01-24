@@ -215,7 +215,7 @@ C. Keyboard
 D. Monitor
 Ans: A
 37. Exponential formatting character (‘E’ or ‘e’) converts a given value to string in the form of _______.
-A. m.dddd E+xxx
+A. m.dddd E+xxx		
 B. m.dddd
 C. E+xxx
 D. None of the above
@@ -480,7 +480,7 @@ C. is a method of a class
 D. maybe overloaded
 E. b and c
 F. all of the above
-Ans: e
+Ans: f
 76. class Test: Form { }
 A. Creates the class Test : Form
 B. Creates the class Test that inherits the class Form

@@ -63,7 +63,7 @@
                         OnClientClick="return validateMoveNext();" />
                     &nbsp;&nbsp;&nbsp;
                     <asp:Button class="next-button" runat="server" ID="ButtonExitTest" Text="Next Question"
-                                OnClick="ButtonExitTest_Click" />
+                                OnClick="ButtonExitTest_Click" Visible="false" />
                 </div>
                 <div class="note-messages">
                     *Note: You cannot go back to the previous question!<br />
