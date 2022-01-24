@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Questionnaire.DataAccess;
 
 namespace Questionnaire.DataRepository
@@ -10,6 +6,8 @@ namespace Questionnaire.DataRepository
     public class ExamService
     {
         private readonly SessionService _sessionService = new SessionService();
+        public int CandidateId => _sessionService.CandidateId;
+
         public string GetExamTextById(int id)
         {
             using (var db = new QuestionnaireEntities())

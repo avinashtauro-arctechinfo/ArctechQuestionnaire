@@ -161,6 +161,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetScoreForCandidate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="candidateId" Type="int" Mode="In" />
+          <Parameter Name="score" Type="int" Mode="InOut" />
+        </Function>
         <EntityContainer Name="QuestionnaireModelStoreContainer">
           <EntitySet Name="AnswerOptions" EntityType="Self.AnswerOptions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Candidate" EntityType="Self.Candidate" Schema="dbo" store:Type="Tables" />
@@ -246,6 +250,17 @@
             <End Role="Topic" EntitySet="Topics" />
             <End Role="Question" EntitySet="Questions" />
           </AssociationSet>
+          <FunctionImport Name="GetCandidateScore" ReturnType="Collection(Int32)">
+            <Parameter Name="candidateId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetCandidateScore1">
+            <Parameter Name="candidateId" Mode="In" Type="Int32" />
+            <Parameter Name="score" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetScoreForCandidate">
+            <Parameter Name="candidateId" Mode="In" Type="Int32" />
+            <Parameter Name="score" Mode="InOut" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="AnswerOption">
           <Key>
@@ -492,6 +507,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetScoreForCandidate" FunctionName="QuestionnaireModel.Store.GetScoreForCandidate" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

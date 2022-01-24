@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Questionnaire.DataRepository;
 
 namespace Questionnaire
@@ -19,10 +14,9 @@ namespace Questionnaire
 
             try
             {
-                var examText = _examService.GetExamTextById(RequestQueryStringExamId);
+                var examText = _examService.GetExamTextById(ExamId);
                 LabelExam.Text = examText.Replace("\n", "<br />");
 
-                ShowQuestionAnswer();
                 PanelStudentName.Visible = true;
             }
             catch (Exception)
@@ -33,20 +27,29 @@ namespace Questionnaire
 
         private void ShowQuestionAnswer()
         {
-            var questionAnswer = _questionAnswerService.GetNextQuestionAnswer();
+            var questionAnswer = _questionAnswerService.GetNextQuestionAnswer(ExamId);
 
-            LabelQuestionNumber.Text = questionAnswer.QuestionNumber.ToString();
+            if (questionAnswer == null)
+            {
+                RedirectToExamEnd();
+                return;
+            }
+
+            LabelQuestionNumber.Text = questionAnswer.QuestionInfo.Id.ToString();
             LabelTotalQuestions.Text = questionAnswer.TotalQuestions.ToString();
-            LabelQuestion.Text = questionAnswer.QuestionText;
+            LabelQuestion.Text = questionAnswer.QuestionInfo.Text;
 
             RadioButtonListAnswers.DataSource = questionAnswer.AnswerOptions;
             RadioButtonListAnswers.DataBind();
         }
 
-        private int RequestQueryStringExamId => int.Parse(Request.QueryString["exam"]);
+        private int ExamId => int.Parse(Request.QueryString["exam"]);
 
         protected void ButtonNext_OnClick(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(RadioButtonListAnswers.SelectedValue))
+                _questionAnswerService.Save(LabelQuestionNumber.Text, RadioButtonListAnswers.SelectedValue);
+
             ShowQuestionAnswer();
         }
 
@@ -59,6 +62,16 @@ namespace Questionnaire
             LabelCandidateName.Text = TextBoxStudentName.Text;
 
             ShowQuestionAnswer();
+        }
+
+        protected void ButtonExitTest_Click(object sender, EventArgs e)
+        {
+            RedirectToExamEnd();
+        }
+
+        private void RedirectToExamEnd()
+        {
+            Response.Redirect($"/ExamEnd?candidate={LabelCandidateName.Text}&candidateId={_examService.CandidateId}&examId={ExamId}");
         }
     }
 }

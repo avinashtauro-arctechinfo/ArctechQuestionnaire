@@ -12,6 +12,8 @@ namespace Questionnaire.DataAccess
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class QuestionnaireEntities : DbContext
     {
@@ -32,5 +34,32 @@ namespace Questionnaire.DataAccess
         public virtual DbSet<ExamQuestion> ExamQuestions { get; set; }
         public virtual DbSet<Topic> Topics { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
+    
+        public virtual ObjectResult<Nullable<int>> GetCandidateScore(Nullable<int> candidateId)
+        {
+            var candidateIdParameter = candidateId.HasValue ?
+                new ObjectParameter("candidateId", candidateId) :
+                new ObjectParameter("candidateId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetCandidateScore", candidateIdParameter);
+        }
+    
+        public virtual int GetCandidateScore1(Nullable<int> candidateId, ObjectParameter score)
+        {
+            var candidateIdParameter = candidateId.HasValue ?
+                new ObjectParameter("candidateId", candidateId) :
+                new ObjectParameter("candidateId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetCandidateScore1", candidateIdParameter, score);
+        }
+    
+        public virtual int GetScoreForCandidate(Nullable<int> candidateId, ObjectParameter score)
+        {
+            var candidateIdParameter = candidateId.HasValue ?
+                new ObjectParameter("candidateId", candidateId) :
+                new ObjectParameter("candidateId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetScoreForCandidate", candidateIdParameter, score);
+        }
     }
 }

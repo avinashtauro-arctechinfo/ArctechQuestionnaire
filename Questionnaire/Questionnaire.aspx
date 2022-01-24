@@ -5,50 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Exam Questions</title>
-    <style type="text/css">
-        body {
-            font-family: arial;
-        }
-
-        .candidate {
-            background-color: orange;
-            font-size: 25px;
-            padding: 10px 5px;
-        }
-
-        .question {
-            background-color: antiquewhite;
-            font-size: 25px;
-            padding: 5px 5px;
-        }
-
-        .answers {
-            background-color: azure;
-            font-size: 25px;
-            padding: 5px 5px;
-        }
-
-        .radio-list input[type="radio"] {
-            margin: 15px 5px;
-        }
-
-        div.next-button {
-            background-color: orange;
-            font-size: 25px;
-            padding: 10px 5px;
-        }
-
-        .next-button {
-            font-size: 25px;
-            padding: 0 5px;
-        }
-
-        .note-messages {
-            background-color: antiquewhite;
-            font-size: 16px;
-            padding: 0 5px;
-        }
-    </style>
+    <link href="Content/questionnaire.css" rel="stylesheet" />
 </head>
 <body onload="window.history.forward();">
     <form id="form1" runat="server">
@@ -98,12 +55,15 @@
                     <asp:Label runat="server" ID="LabelQuestion"></asp:Label>
                 </div>
                 <div class="answers">
-                    <asp:RadioButtonList class="radio-list" runat="server" ID="RadioButtonListAnswers" />
+                    <asp:RadioButtonList class="radio-list" runat="server" ID="RadioButtonListAnswers" DataTextField="Text" DataValueField="Id" />
                 </div>
                 <div class="next-button">
                     <asp:Button class="next-button" runat="server" ID="ButtonNext" Text="Next Question"
                         OnClick="ButtonNext_OnClick"
                         OnClientClick="return validateMoveNext();" />
+                    &nbsp;&nbsp;&nbsp;
+                    <asp:Button class="next-button" runat="server" ID="ButtonExitTest" Text="Next Question"
+                                OnClick="ButtonExitTest_Click" />
                 </div>
                 <div class="note-messages">
                     *Note: You cannot go back to the previous question!<br />
@@ -113,6 +73,7 @@
         </div>
     </form>
     <script type="text/javascript">
+        var alreadyClicked = false;
         function validateMoveNext() {
             const radio = document.getElementsByName("<%= RadioButtonListAnswers.ClientID %>");
 
